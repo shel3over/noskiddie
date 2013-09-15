@@ -2,16 +2,7 @@
 """
 auth @shel3over
 
-"""
-SMTP_SERVER="smtp.google.com"
-SMTP_PORT=587
-SMTP_FROM_MAIL="xxxx@xxx"
-SMTP_TO=['xxxxxxxxxxxx@gmail.com']
-SMTP_LOGIN="xxxxxxxx@xxxxx.com"
-SMTP_PASS="xxxxxxxx"
-LOG_PATH="/var/log/apache2/access.log"
-
-#end configuration ( this will be out of here :3 ) 
+""" 
 import Queue
 import thread
 from time import sleep
