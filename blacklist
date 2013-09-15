@@ -8,7 +8,7 @@ phpmyadmin
 union
 /bin/
 sqlmap
-nmap
+nmap scripting engine
 grabber
 cgichk
 bsqlbf
