@@ -3,7 +3,7 @@ secure_admin_panel
 passwd
 acuntex
 /cgi-
-/admin
+/admin/
 phpmyadmin
 union
 /bin/
@@ -20,7 +20,7 @@ n-stealth
 brutus
 webtrends security analyzer
 netsparker
-python
+python-urllib
 jaascois
 pmafind
 .nasl
