@@ -23,7 +23,6 @@ def actionManager():
 		ip,line=actionQueue.get()
 		actionQueue.task_done()
 		actionIptable(ip)
-		continue
 		#sending mail alert :)
 		msg=MIMEText(line)
 		msg['Subject'] = 'KIDS ALERT : ', ip
