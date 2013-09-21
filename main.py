@@ -45,7 +45,7 @@ def logWatcher():
 	#i'm a thread i loop forever :)
 	while True:
 		line = f.stdout.readline().lower()
-		ip = line[0:15].split(' ')[0] # what about ipv6 -_-! 
+		ip = line.split(' ')[0]
 		if ip == lastIp:
 			continue
 		for bad in blacklist:
@@ -60,7 +60,12 @@ def actionCloudflare(ip):
 	urllib.open('https://www.cloudflare.com/api.html?a=ban&key=%s&u=%s&tkn=%s'%(ip,config.get('cloudflare','user'),config.get('cloudflare','token'))).read()
 
 def actionIptable(ip):
-	os.popen('/usr/bin/env iptables -A INPUT -s %s -j DROP'%ip)
+	if ':' in ip:
+		iptables='ip6tables'
+	else:
+		iptables='iptables'
+		
+	os.popen('/usr/bin/env %s -A INPUT -s %s -j DROP'%(iptables,ip))
 	return True
   
 actionQueue=Queue.Queue()
