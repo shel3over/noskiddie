@@ -30,7 +30,7 @@ def actionManager():
 		msg['To'] = config.get('smtp','to')
 		server =  smtplib.SMTP(config.get('smtp','server'),config.get('smtp','port'))
 		server.login(config.get('smtp','user'),config.get('smtp','pass'))
-		server.sendmail(fromaddr,toaddrs, msg.as_string())
+		server.sendmail(msg['From'],['To'], msg.as_string())
 		server.quit()
 
 def logWatcher():
