@@ -15,14 +15,14 @@ import ConfigParser
 
 
 def actionManager():
-    #i'm a thread i loop forever :)
+    # i'm a thread i loop forever :)
     while True:
         ip, line = actionQueue.get()
         actionQueue.task_done()
         actionIptable(ip)
-        #sending mail alert :)
+        # sending mail alert :)
         msg = MIMEText(line)
-        msg['Subject'] = 'KIDS ALERT : ',  ip
+        msg['Subject'] = 'KIDS ALERT : ', ip
         msg['From'] = config.get('smtp', 'from')
         msg['To'] = config.get('smtp', 'to')
         server = smtplib.SMTP(
@@ -30,12 +30,12 @@ def actionManager():
             config.get('smtp', 'port'),
         )
         server.login(config.get('smtp', 'user'), config.get('smtp', 'pass'))
-        server.sendmail(msg['From'], ['To'],  msg.as_string())
+        server.sendmail(msg['From'], ['To'], msg.as_string())
         server.quit()
 
 
 def logWatcher():
-    #load the blaklist file
+    # load the blaklist file
     blacklist = []
     for item in open('blacklist').readlines():
         blacklist.append(item.strip())
@@ -45,7 +45,7 @@ def logWatcher():
         stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     lastIp = ''
-    #i'm a thread i loop forever :)
+    # i'm a thread i loop forever :)
     while True:
         line = f.stdout.readline().lower()
         ip = line.split(' ')[0]
@@ -76,13 +76,13 @@ def actionIptable(ip):
     os.popen('/usr/bin/env %s -A INPUT -s %s -j DROP' % (iptables, ip))
     return True
 
-#load the config
+# load the config
 config = ConfigParser.ConfigParser()
 config.read('config.conf')
 actionQueue = Queue.Queue()
-#start the threads
+# start the threads
 thread.start_new_thread(actionManager, ())
 thread.start_new_thread(logWatcher, ())
-#do not do anything :3
+# do not do anything :3
 while True:
     sleep(1000)
