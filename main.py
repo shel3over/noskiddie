@@ -13,6 +13,7 @@ import os
 import urllib
 import ConfigParser
 import stat
+import re
 
 
 def actionManager():
@@ -63,6 +64,12 @@ def logWatcher():
         line = f.stdout.readline().lower()
         ip = line.split(' ')[0]
         if ip == lastIp:
+            continue
+
+        # we don't care if the ip is valid ,just a white list of chars
+        if not re.match(r'^([0-9A-Fa-f\:\.])+$', ip):
+            print "ip : %s not valid" % ip
+            lastIp = ip
             continue
         for bad in blacklist:
             if bad in line:
