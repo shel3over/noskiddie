@@ -12,6 +12,7 @@ import smtplib
 import os
 import urllib
 import ConfigParser
+import stat
 
 
 def actionManager():
@@ -35,6 +36,18 @@ def actionManager():
 
 
 def logWatcher():
+    # check the log file permition
+    logStat = os.stat(config.get('global', 'logpath'))
+
+    if not logStat.st_mode & stat.S_IFREG:
+        print "%s is not a regular file" % config.get('global', 'logpath')
+        os._exit(1)
+
+    if logStat.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
+        print "%s chmod should be 744 at least" %\
+            config.get('global', 'logpath')
+        os._exit(1)
+
     # load the blaklist file
     blacklist = []
     for item in open('blacklist').readlines():
