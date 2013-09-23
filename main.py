@@ -82,6 +82,9 @@ def actionCloudflare(ip):
 
 
 def actionIptable(ip):
+    if os.getuid() != 0:
+        print "you don't have  permission to run iptables"
+        return False
     if ':' in ip:
         iptables = 'ip6tables'
     else:
