@@ -23,6 +23,8 @@ def actionManager():
         actionQueue.task_done()
         actionIptable(ip)
         # sending mail alert :)
+        if config.get('smtp', 'enabled') != 'true':
+            continue
         msg = MIMEText(line)
         msg['Subject'] = 'KIDS ALERT : ', ip
         msg['From'] = config.get('smtp', 'from')
