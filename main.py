@@ -15,6 +15,7 @@ import ConfigParser
 import stat
 import re
 import logging
+import logging.handlers
 
 
 def actionManager():
@@ -77,6 +78,7 @@ def logWatcher():
         for bad in blacklist:
             if bad in line:
                 log.debug('bad word detected : %s in %s' % (bad, line))
+                log.info('bad word detected : %s from %s' % (bad, ip))
                 lastIp = ip
                 actionQueue.put((ip, line))
                 break
@@ -104,9 +106,15 @@ def actionIptable(ip):
 # load the config
 config = ConfigParser.ConfigParser()
 config.read('config.conf')
+
 # logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
+handler = logging.handlers.TimedRotatingFileHandler(
+    'noskiddie.log', when='d', interval=1, backupCount=5)
+log.addHandler(handler)
 
 actionQueue = Queue.Queue()
 # start the threads
