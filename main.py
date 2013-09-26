@@ -14,6 +14,7 @@ import urllib
 import ConfigParser
 import stat
 import re
+import logging
 
 
 def actionManager():
@@ -43,12 +44,12 @@ def logWatcher():
     logStat = os.stat(config.get('global', 'logpath'))
 
     if not logStat.st_mode & stat.S_IFREG:
-        print "%s is not a regular file" % config.get('global', 'logpath')
+        log.fatal("%s is not a regular file" % config.get('global', 'logpath'))
         os._exit(1)
 
     if logStat.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
-        print "%s chmod should be 744 at least" %\
-            config.get('global', 'logpath')
+        log.fatal("%s chmod should be 744 at least" %
+                  config.get('global', 'logpath'))
         os._exit(1)
 
     # load the blaklist file
@@ -70,13 +71,12 @@ def logWatcher():
 
         # we don't care if the ip is valid ,just a white list of chars
         if not re.match(r'^([0-9A-Fa-f\:\.])+$', ip):
-            print "ip : %s not valid" % ip
+            log.warn("ip : %s not valid" % ip)
             lastIp = ip
             continue
         for bad in blacklist:
             if bad in line:
-                print 'baaaaaaaaaad', bad  # just for debug
-                print line
+                log.debug('bad word detected : %s in %s' % (bad, line))
                 lastIp = ip
                 actionQueue.put((ip, line))
                 break
@@ -92,7 +92,7 @@ def actionCloudflare(ip):
 
 def actionIptable(ip):
     if os.getuid() != 0:
-        print "you don't have  permission to run iptables"
+        log.warn("you don't have  permission to run iptables")
         return False
     if ':' in ip:
         iptables = 'ip6tables'
@@ -104,6 +104,10 @@ def actionIptable(ip):
 # load the config
 config = ConfigParser.ConfigParser()
 config.read('config.conf')
+# logging
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(__name__)
+
 actionQueue = Queue.Queue()
 # start the threads
 thread.start_new_thread(actionManager, ())
