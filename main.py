@@ -15,7 +15,7 @@ import ConfigParser
 import stat
 import re
 import logging
-import logging.handlers
+import logging.config
 
 
 def actionManager():
@@ -108,13 +108,41 @@ config = ConfigParser.ConfigParser()
 config.read('config.conf')
 
 # logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.config.dictConfig({
+    'version': 1,
+    'root': {
+        'level': config.get('logging', 'level'),
+        'handlers': ['console', 'file'],
+    },
+    'formatters': {
+        'verbose': {
+            'format':
+            '%(levelname)s %(asctime)s %(module)s'
+            '%(process)d %(thread)d %(message)s'
+        },
+        'normal': {
+            'format': config.get('logging', 'format', True)
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file': {
+            #'level': config.get('logging','level'),
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': config.get('logging', 'file'),
+            'when': config.get('logging', 'when'),
+            'interval': config.getint('logging', 'interval'),
+            'backupCount': config.getint('logging', 'backupcount'),
+            'formatter': 'normal',
+        }
+    },
+})
+
 log = logging.getLogger(__name__)
-handler = logging.handlers.TimedRotatingFileHandler(
-    'noskiddie.log', when='d', interval=1, backupCount=5)
-log.addHandler(handler)
 
 actionQueue = Queue.Queue()
 # start the threads
