@@ -41,8 +41,12 @@ def actionManager():
 
 
 def logWatcher():
-    # check the log file permition
-    logStat = os.stat(config.get('global', 'logpath'))
+    # check the log file type/permition
+    try:
+        logStat = os.stat(config.get('global', 'logpath'))
+    except OSError,err:
+        log.fatal("%s: %s" % (err.strerror,err.filename))
+        os._exit(1)
 
     if not logStat.st_mode & stat.S_IFREG:
         log.fatal("%s is not a regular file" % config.get('global', 'logpath'))
