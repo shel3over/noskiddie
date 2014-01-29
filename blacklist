@@ -1,39 +1,21 @@
-secure_admin_panel
-/etc/
-passwd
-acuntex
-/cgi-
-/admin/
-phpmyadmin
-union
-/bin/
-sqlmap
-nmap scripting engine
-grabber
-cgichk
-bsqlbf
-sqlmap
-nessus
-arachni
-sql power injector
-n-stealth
-brutus
-webtrends security analyzer
+acunetix
+"zmeu"
 netsparker
-python-urllib
-jaascois
-pmafind
-.nasl
-nsauditor
-paros
-dirbuster
-pangolin
+/../../
+/etc/passwd
+/fckeditor/
+configuration.php
+paros/
+w3af.sourceforge.net
+vega/1
+nmap scripting engine
+jos_users
+phpmyadmin
+sqlmap
+arachni
 sqlninja
 nikto
 webinspect
-blackwidow
 havij
-w3af
-hydra
-libwww
 pycurl
+ahrefsbot
