@@ -16,6 +16,7 @@ import stat
 import re
 import logging
 import logging.config
+import GeoIP
 
 
 def actionManager():
@@ -28,7 +29,7 @@ def actionManager():
         if config.get('smtp', 'enabled') != 'true':
             continue
         msg = MIMEText(line)
-        msg['Subject'] = 'KIDS ALERT : ', ip
+        msg['Subject'] = geo.country_name_by_addr(ip), 'KIDS ALERT : ', ip
         msg['From'] = config.get('smtp', 'from')
         msg['To'] = config.get('smtp', 'to')
         server = smtplib.SMTP(
@@ -147,6 +148,9 @@ logging.config.dictConfig({
 })
 
 log = logging.getLogger(__name__)
+
+# load the GeoIP database
+geo = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
 
 actionQueue = Queue.Queue()
 # start the threads
