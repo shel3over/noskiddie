@@ -29,7 +29,7 @@ def actionManager():
         if config.get('smtp', 'enabled') != 'true':
             continue
         msg = MIMEText(line)
-        msg['Subject'] = geo.country_name_by_addr(ip), 'KIDS ALERT : ', ip
+        msg['Subject'] = 'KIDS ALERT : %s %s ' % (geo.country_name_by_addr(ip), ip)
         msg['From'] = config.get('smtp', 'from')
         msg['To'] = config.get('smtp', 'to')
         server = smtplib.SMTP(
